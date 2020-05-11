@@ -15,6 +15,7 @@ info_labels = ["WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "
 nFicheiros = cell(1,10);
 labels = labels{:,:};
 N = height(data51);
+fs = 50;
 Ts = 1/50; 
 %t = [0:N-1].Ts;
 t = linspace(0,Ts*(N-1)/60,N);
@@ -48,6 +49,30 @@ for i=1:20
     for j=1:3
         subplot(3, 1, j);
         plot(t(start_time(i):end_time(i)), data51(start_time(i):end_time(i), j));
-        text(start_time(i)/50/60, 0.5, info_labels(ids(i)),'FontSize',6); 
+        if(mod(i,2) == 0)
+            text(start_time(i)/50/60, -0.7, info_labels(ids(i)),'FontSize',6); 
+        else
+            text(start_time(i)/50/60, 0.7, info_labels(ids(i)),'FontSize',6);         
+        end
+  
     end
 end
+
+if(mod(N,2)==0)
+    f = -fs/2:fs/N:fs/2-fs/N;
+else
+    f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
+end
+
+dft = fftshift(fft(detrend(data51))); %not sure se é preciso dar detrend
+dft_ABS = abs(dft);
+figure(2);
+plot(f, dft_ABS), hold on;
+title('|DFT| do sinal');
+ylabel('Magnitude = |X|');
+xlabel('f [Hz]');
+axis tight;
+
+%janela hamming
+for(i=
+hamm = hamming(
