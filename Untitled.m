@@ -11,16 +11,16 @@ data57 = importdata("Dados\acc_exp57_user28.txt");
 data58 = importdata("Dados\acc_exp58_user29.txt");
 data59 = importdata("Dados\acc_exp59_user29.txt");
 data60 = importdata("Dados\acc_exp60_user30.txt");
-info_labels = ["WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING", "STAND_TO_SIT", "SIT_TO_STAND","SIT_TO_LIE","LIE_TO_SIT", "STAND_TO_LIE", "LIE_TO_STAND"];
+info_labels = ["W", "W U", "W D", "SIT", "STAND", "LAY", "ST 2 SI", "SI 2 ST","SI 2 LIE","LIE 2 SI", "ST 2 LIE", "LIE 2_ST"];
 nFicheiros = cell(1,10);
 labels = labels{:,:};
-N = height(data51);
+
+N = height(data51); %tamanho dos dados
 fs = 50;
 Ts = 1/50; 
-%t = [0:N-1].Ts;
-t = linspace(0,Ts*(N-1)/60,N);
+t = linspace(0,Ts*(N-1)/60,N); 
     
-figure(1)
+figure(1);
 data51 = data51{:,:};
 ids = labels(1:20,3);
 start_time = labels(1:20,4);
@@ -38,41 +38,65 @@ xlabel('Min')
 ylabel('ACC Y')
 hold on
 
-
 subplot(3,1,3);
 plot(t, data51(:,3), 'k');
 xlabel('Min')
 ylabel('ACC Z')
 hold on
 
+
 for i=1:20
     for j=1:3
+        figure(1);
         subplot(3, 1, j);
+        
         plot(t(start_time(i):end_time(i)), data51(start_time(i):end_time(i), j));
         if(mod(i,2) == 0)
-            text(start_time(i)/50/60, -0.7, info_labels(ids(i)),'FontSize',6); 
+            text(start_time(i)/50/60, max(data51(:,j))-0.05, info_labels(ids(i)),'FontSize',6); 
         else
-            text(start_time(i)/50/60, 0.7, info_labels(ids(i)),'FontSize',6);         
+            text(start_time(i)/50/60, min(data51(:,j))+0.05, info_labels(ids(i)),'FontSize',6);         
         end
-  
+        hold on;
     end
 end
 
+sinal = data51(start_time(1):end_time(1), 1); %Canal X da primeira atividade
+        
+N = length(sinal); %tamanho dos dados
+%vetor de frequencias
 if(mod(N,2)==0)
-    f = -fs/2:fs/N:fs/2-fs/N;
+    f = -fs/2 : fs/N : fs/2-fs/N;
 else
     f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
 end
 
-dft = fftshift(fft(detrend(data51))); %not sure se é preciso dar detrend
-dft_ABS = abs(dft);
-figure(2);
-plot(f, dft_ABS), hold on;
-title('|DFT| do sinal');
-ylabel('Magnitude = |X|');
-xlabel('f [Hz]');
-axis tight;
+t1 = linspace(0,Ts*(N-1)/60,N); 
+dft_sem_tend = abs(fftshift(fft(detrend(sinal)))); %detrend = tirar tendencia
+dft_com_tend = abs(fftshift(fft(sinal)));
+
+figure()
+subplot(3,1,1);
+plot(t1, sinal);
+xlabel('t[s]')
+ylabel('Amplitude')
+title("Sinal original");
+hold on
+
+subplot(3,1,2);
+plot(f, dft_com_tend(:));
+xlabel('f[Hz]')
+ylabel('Magnitude |X|')
+title("DFT do sinal");
+hold on
+
+subplot(3,1,3);
+plot(f, dft_sem_tend(:));
+xlabel('f[Hz]')
+ylabel('Magnitude |X|')
+title("DFT do sinal sem tendencia");
+hold on
+
+%axis tight;
 
 %janela hamming
-for(i=
-hamm = hamming(
+
