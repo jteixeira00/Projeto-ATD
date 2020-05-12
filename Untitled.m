@@ -2,16 +2,18 @@ clear all;
 
 labels = importlabels("Dados\labels.txt");
 data51 = importdata("Dados\acc_exp51_user25.txt");
-data52 = importdata("Dados\acc_exp52_user26.txt");
-data53 = importdata("Dados\acc_exp53_user26.txt");
-data54 = importdata("Dados\acc_exp54_user27.txt");
-data55 = importdata("Dados\acc_exp55_user27.txt");
-data56 = importdata("Dados\acc_exp56_user28.txt");
-data57 = importdata("Dados\acc_exp57_user28.txt");
-data58 = importdata("Dados\acc_exp58_user29.txt");
-data59 = importdata("Dados\acc_exp59_user29.txt");
-data60 = importdata("Dados\acc_exp60_user30.txt");
+% data52 = importdata("Dados\acc_exp52_user26.txt");
+% data53 = importdata("Dados\acc_exp53_user26.txt");
+% data54 = importdata("Dados\acc_exp54_user27.txt");
+% data55 = importdata("Dados\acc_exp55_user27.txt");
+% data56 = importdata("Dados\acc_exp56_user28.txt");
+% data57 = importdata("Dados\acc_exp57_user28.txt");
+% data58 = importdata("Dados\acc_exp58_user29.txt");
+% data59 = importdata("Dados\acc_exp59_user29.txt");
+% data60 = importdata("Dados\acc_exp60_user30.txt");
 info_labels = ["W", "W U", "W D", "SIT", "STAND", "LAY", "ST 2 SI", "SI 2 ST","SI 2 LIE","LIE 2 SI", "ST 2 LIE", "LIE 2_ST"];
+
+
 nFicheiros = cell(1,10);
 labels = labels{:,:};
 
@@ -99,4 +101,31 @@ hold on
 %axis tight;
 
 %janela hamming
+
+aac_x = data51(:,1);
+aac_y = data51(:,2);
+aac_z = data51(:,3);
+    
+search = labels(labels(:,1)== 51,:);
+
+for i=1:length(search)
+    slicedWindow = search(i,4):search(i,5);
+    tit = info_labels(search(i,3));
+    diff=search(i,5)-search(i,4);
+    hammingWindow = hamming(length(slicedWindow));
+    aac_x_hamm = aac_x(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
+    aac_y_hamm = aac_y(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
+    aac_z_hamm = aac_z(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
+    figure();
+    
+    subplot(3,1, 1);
+    plot(t(1:length(aac_x_hamm)), aac_x_hamm);
+    title(tit + ' X ')
+    subplot(3,1, 2);
+    plot(t(1:length(aac_y_hamm)), aac_y_hamm);
+    title(tit + ' Y ')
+    subplot(3,1, 3);
+    plot(t(1:length(aac_z_hamm)), aac_z_hamm);
+    title(tit + ' Z ');
+end
 
