@@ -62,9 +62,10 @@ for i=1:20
     end
 end
 
-sinal = data51(start_time(1):end_time(1), 1); %Canal X da primeira atividade
-        
-N = length(sinal); %tamanho dos dados
+sinalX = data51(start_time(1):end_time(1), 1); %Canal X da primeira atividade
+sinalY = data51(start_time(1):end_time(1), 2); %Canal Y
+sinalZ = data51(start_time(1):end_time(1), 3); %Canal Z
+N = length(sinalX); %tamanho dos dados
 %vetor de frequencias
 if(mod(N,2)==0)
     f = -fs/2 : fs/N : fs/2-fs/N;
@@ -73,26 +74,30 @@ else
 end
 
 t1 = linspace(0,Ts*(N-1)/60,N); 
-dft_sem_tend = abs(fftshift(fft(detrend(sinal)))); %detrend = tirar tendencia
-dft_com_tend = abs(fftshift(fft(sinal)));
+dft_sem_tendX = abs(fftshift(fft(detrend(sinalX)))); %detrend = tirar tendencia
+dft_com_tendX = abs(fftshift(fft(sinalX)));
+dft_sem_tendY = abs(fftshift(fft(detrend(sinalY)))); %detrend = tirar tendencia
+dft_com_tendY = abs(fftshift(fft(sinalY)));
+dft_sem_tendZ = abs(fftshift(fft(detrend(sinalZ)))); %detrend = tirar tendencia
+dft_com_tendZ = abs(fftshift(fft(sinalZ)));
 
 figure()
 subplot(3,1,1);
-plot(t1, sinal);
+plot(t1, sinalX);
 xlabel('t[s]')
 ylabel('Amplitude')
 title("Sinal original");
 hold on
 
 subplot(3,1,2);
-plot(f, dft_com_tend(:));
+plot(f, dft_com_tendY(:));
 xlabel('f[Hz]')
 ylabel('Magnitude |X|')
 title("DFT do sinal");
 hold on
 
 subplot(3,1,3);
-plot(f, dft_sem_tend(:));
+plot(f, dft_sem_tendX(:));
 xlabel('f[Hz]')
 ylabel('Magnitude |X|')
 title("DFT do sinal sem tendencia");
@@ -100,32 +105,68 @@ hold on
 
 %axis tight;
 
-%janela hamming
+
 
 aac_x = data51(:,1);
 aac_y = data51(:,2);
 aac_z = data51(:,3);
     
 search = labels(labels(:,1)== 51,:);
+%janelas com trend
 
 for i=1:length(search)
+    %hamming
     slicedWindow = search(i,4):search(i,5);
     tit = info_labels(search(i,3));
-    diff=search(i,5)-search(i,4);
-    hammingWindow = hamming(length(slicedWindow));
-    aac_x_hamm = aac_x(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
-    aac_y_hamm = aac_y(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
-    aac_z_hamm = aac_z(slicedWindow(1):slicedWindow(end), 1:1).*hammingWindow;
-    figure();
-    
-    subplot(3,1, 1);
-    plot(t(1:length(aac_x_hamm)), aac_x_hamm);
+    windowSize=search(i,5)-search(i,4)+1;
+    hammingWindow = hamming(length(slicedWindow));  
+    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*hammingWindow;
+    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*hammingWindow;
+    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*hammingWindow;
+    t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+    figure('NumberTitle', 'off', 'Name', tit);
+    subplot(3,3, 1);
+    plot(t1, aac_x_mod);
     title(tit + ' X ')
-    subplot(3,1, 2);
-    plot(t(1:length(aac_y_hamm)), aac_y_hamm);
+    subplot(3,3, 2);
+    plot(t1, aac_y_mod);
     title(tit + ' Y ')
-    subplot(3,1, 3);
-    plot(t(1:length(aac_z_hamm)), aac_z_hamm);
+    subplot(3,3, 3);
+    plot(t1, aac_z_mod);
     title(tit + ' Z ');
+    
+    
+    %hann  
+    hannWindow = hann(length(slicedWindow));
+    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*hannWindow;
+    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*hannWindow;
+    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*hannWindow;
+    subplot(3,3, 4);
+    plot(t1, aac_x_mod);
+    title(tit + ' X ')
+    subplot(3,3, 5);
+    plot(t1, aac_y_mod);
+    title(tit + ' Y ')
+    subplot(3,3, 6);
+    plot(t1, aac_z_mod);
+    title(tit + ' Z ');
+    
+    %hann  
+    blackmanWindow = blackman(length(slicedWindow));
+    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*blackmanWindow;
+    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*blackmanWindow;
+    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*blackmanWindow;
+    
+    subplot(3,3, 7);
+    plot(t1, aac_x_mod);
+    title(tit + ' X ')
+    subplot(3,3, 8);
+    plot(t1, aac_y_mod);
+    title(tit + ' Y ')
+    subplot(3,3, 9);
+    plot(t1, aac_z_mod);
+    title(tit + ' Z ');    
 end
+
+
 
