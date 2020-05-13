@@ -110,63 +110,87 @@ hold on
 aac_x = data51(:,1);
 aac_y = data51(:,2);
 aac_z = data51(:,3);
-    
+
 search = labels(labels(:,1)== 51,:);
+
 %janelas com trend
 
+% for i=1:length(search)
+%     %hamming
+%     slicedWindow = search(i,4):search(i,5);
+%     tit = info_labels(search(i,3));
+%     windowSize=search(i,5)-search(i,4)+1;
+%     hammingWindow = hamming(length(slicedWindow));
+%    
+%     aac_x_mod = abs(fftshift(fft(aac_x(slicedWindow(1):slicedWindow(end),:)))).*hammingWindow;
+%     aac_y_mod = abs(fftshift(fft(aac_y(slicedWindow(1):slicedWindow(end),:)))).*hammingWindow;
+%     aac_z_mod = abs(fftshift(fft(aac_z(slicedWindow(1):slicedWindow(end),:)))).*hammingWindow;
+%     t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+%     figure('NumberTitle', 'off', 'Name', tit);
+%     subplot(3,3, 1);
+%     plot(t1, aac_x_mod);
+%     title(tit + ' X ')
+%     subplot(3,3, 2);
+%     plot(t1, aac_y_mod);
+%     title(tit + ' Y ')
+%     subplot(3,3, 3);
+%     plot(t1, aac_z_mod);
+%     title(tit + ' Z ');
+%     
+%     
+%     %hann  
+%     hannWindow = hann(length(slicedWindow));
+%     aac_x_mod = abs(fftshift(fft(aac_x(slicedWindow(1):slicedWindow(end),:)))).*hannWindow;
+%     aac_y_mod = abs(fftshift(fft(aac_y(slicedWindow(1):slicedWindow(end),:)))).*hannWindow;
+%     aac_z_mod = abs(fftshift(fft(aac_z(slicedWindow(1):slicedWindow(end),:)))).*hannWindow;
+%     subplot(3,3, 4);
+%     plot(t1, aac_x_mod);
+%     title(tit + ' X ')
+%     subplot(3,3, 5);
+%     plot(t1, aac_y_mod);
+%     title(tit + ' Y ')
+%     subplot(3,3, 6);
+%     plot(t1, aac_z_mod);
+%     title(tit + ' Z ');
+%     
+%     %hann  
+%     blackmanWindow = blackman(length(slicedWindow));
+%     aac_x_mod = abs(fftshift(fft(aac_x(slicedWindow(1):slicedWindow(end),:)))).*blackmanWindow;
+%     aac_y_mod = abs(fftshift(fft(aac_y(slicedWindow(1):slicedWindow(end),:)))).*blackmanWindow;
+%     aac_z_mod = abs(fftshift(fft(aac_z(slicedWindow(1):slicedWindow(end),:)))).*blackmanWindow;
+%     
+%     subplot(3,3, 7);
+%     plot(t1, aac_x_mod);
+%     title(tit + ' X ')
+%     subplot(3,3, 8);
+%     plot(t1, aac_y_mod);
+%     title(tit + ' Y ')
+%     subplot(3,3, 9);
+%     plot(t1, aac_z_mod);
+%     title(tit + ' Z ');    
+% end
+
+
+
 for i=1:length(search)
-    %hamming
-    slicedWindow = search(i,4):search(i,5);
-    tit = info_labels(search(i,3));
-    windowSize=search(i,5)-search(i,4)+1;
-    hammingWindow = hamming(length(slicedWindow));  
-    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*hammingWindow;
-    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*hammingWindow;
-    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*hammingWindow;
-    t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
-    figure('NumberTitle', 'off', 'Name', tit);
-    subplot(3,3, 1);
-    plot(t1, aac_x_mod);
-    title(tit + ' X ')
-    subplot(3,3, 2);
-    plot(t1, aac_y_mod);
-    title(tit + ' Y ')
-    subplot(3,3, 3);
-    plot(t1, aac_z_mod);
-    title(tit + ' Z ');
+    
+    if(search(i,3)==1)
+        slicedWindow = search(i,4):search(i,5);
+        windowSize=search(i,5)-search(i,4)+1;
+        aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:)))));
+        
+        N = numel(slicedWindow);
+        if (mod(N,2)==0)
+            f = -fs/2:fs/N:fs/2-fs/N;
+        else
+            f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
+        end
+        figure();
+        plot(f, aac_x_mod);
+        [x, ind] = max(aac_x_mod);
+        y = abs(f(ind));
+        spm = 60*y
+    end
     
     
-    %hann  
-    hannWindow = hann(length(slicedWindow));
-    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*hannWindow;
-    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*hannWindow;
-    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*hannWindow;
-    subplot(3,3, 4);
-    plot(t1, aac_x_mod);
-    title(tit + ' X ')
-    subplot(3,3, 5);
-    plot(t1, aac_y_mod);
-    title(tit + ' Y ')
-    subplot(3,3, 6);
-    plot(t1, aac_z_mod);
-    title(tit + ' Z ');
-    
-    %hann  
-    blackmanWindow = blackman(length(slicedWindow));
-    aac_x_mod = abs(fftshift(fft(aac_x(1:windowSize,:)))).*blackmanWindow;
-    aac_y_mod = abs(fftshift(fft(aac_y(1:windowSize,:)))).*blackmanWindow;
-    aac_z_mod = abs(fftshift(fft(aac_z(1:windowSize,:)))).*blackmanWindow;
-    
-    subplot(3,3, 7);
-    plot(t1, aac_x_mod);
-    title(tit + ' X ')
-    subplot(3,3, 8);
-    plot(t1, aac_y_mod);
-    title(tit + ' Y ')
-    subplot(3,3, 9);
-    plot(t1, aac_z_mod);
-    title(tit + ' Z ');    
 end
-
-
-
