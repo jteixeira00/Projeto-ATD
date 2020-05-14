@@ -81,6 +81,7 @@ dft_com_tendY = abs(fftshift(fft(sinalY)));
 dft_sem_tendZ = abs(fftshift(fft(detrend(sinalZ)))); %detrend = tirar tendencia
 dft_com_tendZ = abs(fftshift(fft(sinalZ)));
 
+%{
 figure()
 subplot(3,1,1);
 plot(t1, sinalX);
@@ -90,7 +91,7 @@ title("Sinal original");
 hold on
 
 subplot(3,1,2);
-plot(f, dft_com_tendY(:));
+plot(f, dft_com_tendX(:));
 xlabel('f[Hz]')
 ylabel('Magnitude |X|')
 title("DFT do sinal");
@@ -102,6 +103,7 @@ xlabel('f[Hz]')
 ylabel('Magnitude |X|')
 title("DFT do sinal sem tendencia");
 hold on
+%}
 
 %axis tight;
 
@@ -170,27 +172,307 @@ search = labels(labels(:,1)== 51,:);
 %     title(tit + ' Z ');    
 % end
 
-
+counters = zeros(1,12);
 
 for i=1:length(search)
+   switch search(i,3)
+       case 1  
+            if(counters(1) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = "Walking";
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(2);
+                subplot(3,3, 1);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 2);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 3);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(1) = 1;
+                hold on;
+            end
+       case 2
+           if(counters(2) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(2);
+                subplot(3,3, 4);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 5);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 6);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(2) = 1;
+                hold on;
+           end
+       case 3
+           if(counters(3) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(2);
+                subplot(3,3, 7);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 8);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 9);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(3) = 1;
+                hold on;
+           end
+       case 4
+           if(counters(4) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(3);
+                subplot(3,3, 1);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 2);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 3);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(4) = 1;
+                hold on;
+           end
+       case 5
+           if(counters(5) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(3);
+                subplot(3,3, 4);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 5);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 6);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(5) = 1;
+                hold on;
+           end
+       case 6
+           if(counters(6) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(3);
+                subplot(3,3, 7);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,3, 8);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,3, 9);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(6) = 1;
+                hold on;
+           end
+       case 7
+           if(counters(7) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 1);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 2);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 3);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(7) = 1;
+                hold on;
+           end
+       case 8
+           if(counters(8) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 4);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 5);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 6);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(8) = 1;
+                hold on;
+           end
+       case 9
+           if(counters(9) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 7);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 8);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 9);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(9) = 1;
+                hold on;
+           end
+       case 10
+           if(counters(10) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 10);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 11);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 12);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(10) = 1;
+                hold on;
+           end
+       case 11
+           if(counters(11) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 13);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 14);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 15);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(11) = 1;
+                hold on;
+           end
+       case 12
+           if(counters(12) == 0)
+                slicedWindow = search(i,4):search(i,5);
+                tit = info_labels(search(i,3));
+                windowSize=search(i,5)-search(i,4)+1;
+                hammingWindow = hamming(length(slicedWindow));
+                aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_y_mod = abs(fftshift(fft(detrend(aac_y(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                aac_z_mod = abs(fftshift(fft(detrend(aac_z(slicedWindow(1):slicedWindow(end),:))))).*hammingWindow;
+                t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
+                figure(4);
+                subplot(3,6, 16);
+                plot(t1, aac_x_mod);
+                title(tit + ' X ')
+                subplot(3,6, 17);
+                plot(t1, aac_y_mod);
+                title(tit + ' Y ')
+                subplot(3,6, 18);
+                plot(t1, aac_z_mod);
+                title(tit + ' Z ');
+                counters(12) = 1;
+                hold on;
+           end
+   end
+       
     
-    if(search(i,3)==1)
-        slicedWindow = search(i,4):search(i,5);
-        windowSize=search(i,5)-search(i,4)+1;
-        aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:)))));
-        
-        N = numel(slicedWindow);
-        if (mod(N,2)==0)
-            f = -fs/2:fs/N:fs/2-fs/N;
-        else
-            f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
-        end
-        figure();
-        plot(f, aac_x_mod);
-        [x, ind] = max(aac_x_mod);
-        y = abs(f(ind));
-        spm = 60*y
-    end
+%     if(search(i,3)==1)
+%         figure
+%         slicedWindow = search(i,4):search(i,5);
+%         windowSize=search(i,5)-search(i,4)+1;
+%         aac_x_mod = abs(fftshift(fft(detrend(aac_x(slicedWindow(1):slicedWindow(end),:)))));
+%         
+%         N = numel(slicedWindow);
+%         if (mod(N,2)==0)
+%             f = -fs/2:fs/N:fs/2-fs/N;
+%         else
+%             f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
+%         end
+%         figure();
+%         plot(f, aac_x_mod);
+%         [x, ind] = max(aac_x_mod);
+%         y = abs(f(ind));
+%         spm = 60*y;
+%     end
     
     
 end
