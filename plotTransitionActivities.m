@@ -1,10 +1,19 @@
 function [aac_x_mod, aac_y_mod, aac_z_mod] = plotTransitionActivities(data, start, finish, activityID, figureID)
     %periodo de amostragem, tendo em conta que a frequencia de amostragem é
     %50 Hz
-    Ts = 1/50 ;  
+    fs = 50;
+    Ts = 1/fs ;  
+    windowSize=finish-start+1;
     x_component = data(:, 1);
     y_component = data(:, 2);
     z_component = data(:, 3);
+    N = windowSize;
+    
+    if(mod(N,2)==0)
+        f = -fs/2 : fs/N : fs/2-fs/N;
+    else
+        f = -fs/2+fs/(2*N):fs/N:fs/2-fs/(2*N);
+    end
     
     window = start:finish;    %window slice that contains activity
     
@@ -35,13 +44,13 @@ function [aac_x_mod, aac_y_mod, aac_z_mod] = plotTransitionActivities(data, star
     figure(figureID);
     % 3*(activityID-7) dá nos a linha certa consoante a atividade
     subplot(3,6, 1 + 3*(activityID-7));
-    plot(t, aac_x_mod);
+    plot(f, aac_x_mod);
     title(activity + ' X ')
     subplot(3,6, 2 + 3*(activityID-7));
-    plot(t, aac_y_mod);
+    plot(f, aac_y_mod);
     title(activity + ' Y ')
     subplot(3,6, 3 + 3*(activityID-7));
-    plot(t, aac_z_mod);
+    plot(f, aac_z_mod);
     title(activity + ' Z ');
     hold on;
 end
