@@ -46,7 +46,7 @@ function [aac_x_mod, aac_y_mod, aac_z_mod] = plotDynamicActivities(data, start, 
     aac_y_mod = abs(fftshift(fft(detrend(y_component(window(1):window(end),:))))).*hammingWindow;
     aac_z_mod = abs(fftshift(fft(detrend(z_component(window(1):window(end),:))))).*hammingWindow;
     
-    t = linspace(0,Ts*(windowSize-1)/60,windowSize)';  %array of times for the plot
+    %t = linspace(0,Ts*(windowSize-1)/60,windowSize)';  %array of times for the plot
     
     figure(figureID);
     % 3*(activityID-1) dá nos a linha certa consoante a atividade
