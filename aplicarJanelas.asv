@@ -3,87 +3,321 @@ function [] = aplicarJanelas(dataLabels, signal_x, signal_y, signal_z)
     fs = 50;
     Ts = 1/fs;      %periodo de amostragem
     activity_names = ["Walking", "Walking Up", "Walking Down", "Siting", "Standing", "Laying", "Stand to sit", "Sit to stand","Sit to lie","Lie to sit", "Stand to lie", "Lie to stand"];
-    counters = zeros(1,12);     %para verificar se uma atividade já foi apresentada no grafico
     
+    fs = 50;        %frequencia de amostragem
+    Ts = 1/fs;      %periodo de amostragem
+      
+
+    counters = zeros(1,12);     %para verificar se uma atividade jï¿½ foi analisada
+
     for i=1:length(dataLabels)
+        
         start = dataLabels(i,4);
         finish = dataLabels(i,5);
         window = start : finish;
         activityID = dataLabels(i,3);
-        activity = activity_names(activityID);
+        activity_name = activity_names(activityID);
         windowSize = finish - start + 1;
-        
+        N = windowSize;
+    
         if(counters(activityID) == 1)
             %ja analisamos a atividade, portanto ignoramos
             continue
         end
         
-        %hamming
-        hammingWindow = hamming(windowSize);
+        atividade_x = signal_x(start : finish);
+        atividade_y = signal_y(start : finish);
+        atividade_z = signal_z(start : finish);
+        
+        
+        % HAmming
+        %JANELA DESLIZANTE
+        
+        Tframe = 6;                 % largura da janela de anï¿½lise em s
+        Toverlap = 1;               % sobreposiï¿½ao das janelas em s
+        Nframe = round(Tframe*fs);              % nï¿½mero de amostras na janela
+        Noverlap = round(Toverlap*fs);          % nï¿½mero de amostras sobrepostas na janela
 
-        dft_x = abs(fftshift(fft(signal_x(window(1):window(end),:))));
-        dft_y = abs(fftshift(fft(signal_y(window(1):window(end),:))));
-        dft_z = abs(fftshift(fft(signal_z(window(1):window(end),:))));
+
+        if mod(Nframe, 2)==0
+            f_frame = -fs/2:fs/Nframe:fs/2-fs/Nframe;
+        else 
+            f_frame = -fs/2+fs/(2*Nframe):fs/Nframe:...
+                fs/2-fs/(2*Nframe);
+        end
+
         
-        aac_x_mod = dft_x.*hammingWindow;
-        aac_y_mod = dft_y.*hammingWindow;
-        aac_z_mod = dft_z.*hammingWindow;
+        frequencias_x = [];
+        magnitudes_x = [];
+        frequencias_y = [];
+        magnitudes_y = [];
+        frequencias_z = [];
+        magnitudes_z = [];
         
-        t1 = linspace(0,Ts*(windowSize-1)/60,windowSize)';
-        figure("Name", activity + " - Janelas",'NumberTitle','off');
+        if(Nframe >= windowSize)
+            h = hamming(windowSize); % janela de hamming
+            x_frame = atividade_x.*h;
+            y_frame = atividade_y.*h;
+            z_frame = atividade_z.*h;
+
+            % obter a magnitude da fft do sinal
+            m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+            m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+            m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+            m_X_frame = m_X_frame/Nframe*2;
+            m_Y_frame = m_Y_frame/Nframe*2;
+            m_Z_frame = m_Z_frame/Nframe*2;
+            
+            % obter o mï¿½ximo da magnitude do sinal
+            m_X_frame_max = max(m_X_frame);
+            m_Y_frame_max = max(m_Y_frame);
+            m_Z_frame_max = max(m_Z_frame);
+% 
+%             % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+            freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+            freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+            freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+            frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+            frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+            frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+
+            magnitudes_x = [magnitudes_x, m_X_frame_max];
+            magnitudes_y = [magnitudes_y, m_Y_frame_max];
+            magnitudes_z = [magnitudes_z, m_Z_frame_max];
+            
+        else
+            
+            h = hamming(Nframe); % janela de hamming
+            for ii = 1:Nframe-Noverlap:N-Nframe
+                % aplicar a janela ao sinal do tempo
+                x_frame = atividade_x(ii:ii+Nframe-1).*h;
+                y_frame = atividade_y(ii:ii+Nframe-1).*h;
+                z_frame = atividade_z(ii:ii+Nframe-1).*h;
+
+                % obter a magnitude da fft do sinal
+                m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+                m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+                m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+                m_X_frame = m_X_frame/Nframe*2;
+                m_Y_frame = m_Y_frame/Nframe*2;
+                m_Z_frame = m_Z_frame/Nframe*2;
+
+                % obter o mï¿½ximo da magnitude do sinal
+                m_X_frame_max = max(m_X_frame);
+                m_Y_frame_max = max(m_Y_frame);
+                m_Z_frame_max = max(m_Z_frame);
+                
+                % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+                freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+                freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+                freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+                frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+                frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+                frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+                
+                magnitudes_x = [magnitudes_x, m_X_frame_max];
+                magnitudes_y = [magnitudes_y, m_Y_frame_max];
+                magnitudes_z = [magnitudes_z, m_Z_frame_max];
+
+            end
+        end
         
-        subplot(3,3, 1);
-        plot(t1, aac_x_mod);
+        figure("Name", activity_name + " - Janelas",'NumberTitle','off');
+        
+        subplot(4,3, 1);
+        plot(frequencias_x, magnitudes_x, 'o');
         title("Hamming" + ' X ')
-        subplot(3,3, 2);
-        plot(t1, aac_y_mod);
+        subplot(4,3, 2);
+        plot(frequencias_y, magnitudes_y, 'o');
         title("Hamming" + ' Y ')
-        subplot(3,3, 3);
-        plot(t1, aac_z_mod);
+        subplot(4,3, 3);
+        plot(frequencias_z, magnitudes_z, 'o');
         title("Hamming" + ' Z ');
 
 
-        %hann  
-        hannWindow = hann(windowSize);
+%         %hann  
+        frequencias_x = [];
+        magnitudes_x = [];
+        frequencias_y = [];
+        magnitudes_y = [];
+        frequencias_z = [];
+        magnitudes_z = [];
         
-        dft_x = abs(fftshift(fft(signal_x(window(1):window(end),:))));
-        dft_y = abs(fftshift(fft(signal_y(window(1):window(end),:))));
-        dft_z = abs(fftshift(fft(signal_z(window(1):window(end),:))));
+        if(Nframe >= windowSize)
+            h = hann(windowSize); % janela de hamming
+            x_frame = atividade_x.*h;
+            y_frame = atividade_y.*h;
+            z_frame = atividade_z.*h;
+
+            % obter a magnitude da fft do sinal
+            m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+            m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+            m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+            m_X_frame = m_X_frame/Nframe*2;
+            m_Y_frame = m_Y_frame/Nframe*2;
+            m_Z_frame = m_Z_frame/Nframe*2;
+            
+            % obter o mï¿½ximo da magnitude do sinal
+            m_X_frame_max = max(m_X_frame);
+            m_Y_frame_max = max(m_Y_frame);
+            m_Z_frame_max = max(m_Z_frame);
+% 
+%             % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+            freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+            freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+            freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+            frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+            frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+            frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+
+            magnitudes_x = [magnitudes_x, m_X_frame_max];
+            magnitudes_y = [magnitudes_y, m_Y_frame_max];
+            magnitudes_z = [magnitudes_z, m_Z_frame_max];
+            
+        else
+            
+            h = hann(Nframe); % janela de hamming
+            for ii = 1:Nframe-Noverlap:N-Nframe
+                % aplicar a janela ao sinal do tempo
+                x_frame = atividade_x(ii:ii+Nframe-1).*h;
+                y_frame = atividade_y(ii:ii+Nframe-1).*h;
+                z_frame = atividade_z(ii:ii+Nframe-1).*h;
+
+                % obter a magnitude da fft do sinal
+                m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+                m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+                m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+                m_X_frame = m_X_frame/Nframe*2;
+                m_Y_frame = m_Y_frame/Nframe*2;
+                m_Z_frame = m_Z_frame/Nframe*2;
+
+                % obter o mï¿½ximo da magnitude do sinal
+                m_X_frame_max = max(m_X_frame);
+                m_Y_frame_max = max(m_Y_frame);
+                m_Z_frame_max = max(m_Z_frame);
+                
+                % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+                freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+                freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+                freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+                frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+                frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+                frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+                
+                magnitudes_x = [magnitudes_x, m_X_frame_max];
+                magnitudes_y = [magnitudes_y, m_Y_frame_max];
+                magnitudes_z = [magnitudes_z, m_Z_frame_max];
+
+            end
+        end
         
-        aac_x_mod = dft_x.*hannWindow;
-        aac_y_mod = dft_y.*hannWindow;
-        aac_z_mod = dft_z.*hannWindow;
-        
-        subplot(3,3, 4);
-        plot(t1, aac_x_mod);
+        subplot(4,3, 4);
+        plot(frequencias_x, magnitudes_x, 'o');
         title("Hann" + ' X ')
-        subplot(3,3, 5);
-        plot(t1, aac_y_mod);
+        subplot(4,3, 5);
+        plot(frequencias_y, magnitudes_y, 'o');
         title("Hann" + ' Y ')
-        subplot(3,3, 6);
-        plot(t1, aac_z_mod);
+        subplot(4,3, 6);
+        plot(frequencias_z, magnitudes_z, 'o');
         title("Hann" + ' Z ');
-
-        %hann  
-        blackmanWindow = blackman(windowSize);
+% 
+%         %blackman  
+        frequencias_x = [];
+        magnitudes_x = [];
+        frequencias_y = [];
+        magnitudes_y = [];
+        frequencias_z = [];
+        magnitudes_z = [];
         
-        dft_x = abs(fftshift(fft(signal_x(window(1):window(end),:))));
-        dft_y = abs(fftshift(fft(signal_y(window(1):window(end),:))));
-        dft_z = abs(fftshift(fft(signal_z(window(1):window(end),:))));
-        
-        aac_x_mod = dft_x.*blackmanWindow;
-        aac_y_mod = dft_y.*blackmanWindow;
-        aac_z_mod = dft_z.*blackmanWindow;
+        if(Nframe >= windowSize)
+            h = blackman(windowSize); % janela de hamming
+            x_frame = atividade_x.*h;
+            y_frame = atividade_y.*h;
+            z_frame = atividade_z.*h;
 
-        subplot(3,3, 7);
-        plot(t1, aac_x_mod);
+            % obter a magnitude da fft do sinal
+            m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+            m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+            m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+            m_X_frame = m_X_frame/Nframe*2;
+            m_Y_frame = m_Y_frame/Nframe*2;
+            m_Z_frame = m_Z_frame/Nframe*2;
+            
+            % obter o mï¿½ximo da magnitude do sinal
+            m_X_frame_max = max(m_X_frame);
+            m_Y_frame_max = max(m_Y_frame);
+            m_Z_frame_max = max(m_Z_frame);
+% 
+%             % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+            freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+            freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+            freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+            frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+            frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+            frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+
+            magnitudes_x = [magnitudes_x, m_X_frame_max];
+            magnitudes_y = [magnitudes_y, m_Y_frame_max];
+            magnitudes_z = [magnitudes_z, m_Z_frame_max];
+            
+        else
+            
+            h = blackman(Nframe); % janela de hamming
+            for ii = 1:Nframe-Noverlap:N-Nframe
+                % aplicar a janela ao sinal do tempo
+                x_frame = atividade_x(ii:ii+Nframe-1).*h;
+                y_frame = atividade_y(ii:ii+Nframe-1).*h;
+                z_frame = atividade_z(ii:ii+Nframe-1).*h;
+
+                % obter a magnitude da fft do sinal
+                m_X_frame = abs(fftshift(fft(detrend(x_frame))));
+                m_Y_frame = abs(fftshift(fft(detrend(y_frame))));
+                m_Z_frame = abs(fftshift(fft(detrend(z_frame))));
+
+                m_X_frame = m_X_frame/Nframe*2;
+                m_Y_frame = m_Y_frame/Nframe*2;
+                m_Z_frame = m_Z_frame/Nframe*2;
+
+                % obter o mï¿½ximo da magnitude do sinal
+                m_X_frame_max = max(m_X_frame);
+                m_Y_frame_max = max(m_Y_frame);
+                m_Z_frame_max = max(m_Z_frame);
+                
+                % encontrar os ï¿½ndices do mï¿½ximo da magnitude do sinal
+                freqs_relevantes_x = f_frame(m_X_frame == m_X_frame_max);
+                freqs_relevantes_y = f_frame(m_Y_frame == m_Y_frame_max);
+                freqs_relevantes_z = f_frame(m_Z_frame == m_Z_frame_max);
+
+                frequencias_x = [frequencias_x, abs(freqs_relevantes_x(1))];
+                frequencias_y = [frequencias_y, abs(freqs_relevantes_y(1))];
+                frequencias_z = [frequencias_z, abs(freqs_relevantes_z(1))];
+                
+                magnitudes_x = [magnitudes_x, m_X_frame_max];
+                magnitudes_y = [magnitudes_y, m_Y_frame_max];
+                magnitudes_z = [magnitudes_z, m_Z_frame_max];
+
+            end
+        end
+        
+        subplot(4,3, 7);
+        plot(frequencias_x, magnitudes_x, 'o');
         title("Blackman" + ' X ')
-        subplot(3,3, 8);
-        plot(t1, aac_y_mod);
+        subplot(4,3, 8);
+        plot(frequencias_y, magnitudes_y, 'o');
         title("Blackman" + ' Y ')
-        subplot(3,3, 9);
-        plot(t1, aac_z_mod);
-        title("Blackman" + ' Z ');   
+        subplot(4,3, 9);
+        plot(frequencias_z, magnitudes_z, 'o');
+        title("Blackman" + ' Z ');
         
         counters(activityID) = 1;
     end
