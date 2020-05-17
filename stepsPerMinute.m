@@ -8,14 +8,14 @@ function [spm_x, spm_y, spm_z] = stepsPerMinute(x_signalDFT, y_signalDFT, z_sign
     end
 
     % saber a posiçao onde a frequencia com maior magnitude esta presente
-    [~, x_ind] = max(x_signalDFT);
-    [~, y_ind] = max(y_signalDFT);
-    [~, z_ind] = max(z_signalDFT);
+    [x_maior_valor, x_maior_ind] = max(x_signalDFT);
+    [y_maior_valor, y_maior_ind] = max(y_signalDFT);
+    [z_maior_valor, z_maior_ind] = max(z_signalDFT);
     
     % tirar a dita frequencia, que nos dá o numero de passos por segundo
-    sps_x = abs(f(x_ind));
-    sps_y = abs(f(y_ind));
-    sps_z = abs(f(z_ind));
+    sps_x = abs(f(x_maior_ind));
+    sps_y = abs(f(y_maior_ind));
+    sps_z = abs(f(z_maior_ind));
     
     %passar para passos por minuto
     spm_x = 60*sps_x;
