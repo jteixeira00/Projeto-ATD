@@ -140,7 +140,7 @@ end
 %fazer media e desvio padrao
 
 
-
+stft(data51(:,3));
 
 
 
