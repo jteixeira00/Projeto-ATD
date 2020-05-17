@@ -5,7 +5,7 @@ function stft(data)
     N = numel(data);
     
     t = N*Ts; % Nao percebo esta linha
-    Tframe = 0.0015*t;
+    Tframe = 0.001*t;
     
     Toverlap = Tframe/2;
     
@@ -19,13 +19,13 @@ function stft(data)
     res = [];
     for ii = 1:Nframe-Noverlap:N-Nframe
         data_frame = data(ii:ii+Nframe-1).*h;
+        
         m_data_frame = abs(fftshift(fft(data_frame)));
         res = horzcat(res, m_data_frame(x));    
     end
     
     figure();
     waterfall(20*log10(res))
-    figure();
     imagesc(20*log10(res))
     
 end
