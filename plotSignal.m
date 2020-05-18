@@ -35,7 +35,7 @@ function [x, y, z] = plotSignal(data, dataLabels, figureID)
     %nomes das atividades para legendar o grafico
     activity_names = ["W", "W U", "W D", "SIT", "STAND", "LAY", "ST 2 SI", "SI 2 ST","SI 2 LIE","LIE 2 SI", "ST 2 LIE", "LIE 2_ST"];
 
-    for i=1:20
+    for i=1:length(dataLabels)
         %percorrer as atividades todas
         for j=1:3
             %para cada atividade, dar plot das componentes X, Y e Z
