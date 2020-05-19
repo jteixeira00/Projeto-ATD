@@ -5,7 +5,8 @@ function [] = aplicarJanelasDeslizantes(dataLabels, signal_x, signal_y, signal_z
     activity_names = ["Walking", "Walking Up", "Walking Down", "Siting", "Standing", "Laying", "Stand to sit", "Sit to stand","Sit to lie","Lie to sit", "Stand to lie", "Lie to stand"];
       
     counters = zeros(1,12);     %para verificar se uma atividade jï¿½ foi analisada
-
+   
+    
     for i=1:length(dataLabels)
         
         start = dataLabels(i,4);
@@ -38,21 +39,25 @@ function [] = aplicarJanelasDeslizantes(dataLabels, signal_x, signal_y, signal_z
         end
 
         dft_sem_tendX = abs(fftshift(fft(detrend(atividade_x)))); %detrend = tirar tendencia
-
         dft_sem_tendY = abs(fftshift(fft(detrend(atividade_y)))); %detrend = tirar tendencia
-
         dft_sem_tendZ = abs(fftshift(fft(detrend(atividade_z)))); %detrend = tirar tendencia
 
     
         subplot(3,4, 1);
-        plot(f, dft_sem_tendX, 'o');
-        title("DTF" + ' X ')
+        plot(f, dft_sem_tendX);
+        title("DTF" + ' X ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 5);
-        plot(f, dft_sem_tendY, 'o');
-        title("DTF" + ' Y ')
+        plot(f, dft_sem_tendY);
+        title("DTF" + ' Y ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 9);
-        plot(f, dft_sem_tendZ, 'o');
+        plot(f, dft_sem_tendZ);
         title("DFT" + ' Z ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         
         
         % HAmming
@@ -155,12 +160,18 @@ function [] = aplicarJanelasDeslizantes(dataLabels, signal_x, signal_y, signal_z
         subplot(3,4, 2);
         plot(frequencias_x, magnitudes_x, 'o');
         title("Hamming" + ' X ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 6);
         plot(frequencias_y, magnitudes_y, 'o');
         title("Hamming" + ' Y ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 10);
         plot(frequencias_z, magnitudes_z, 'o');
         title("Hamming" + ' Z ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
 
 
 %         %hann  
@@ -246,12 +257,18 @@ function [] = aplicarJanelasDeslizantes(dataLabels, signal_x, signal_y, signal_z
         subplot(3,4, 3);
         plot(frequencias_x, magnitudes_x, 'o');
         title("Hann" + ' X ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 7);
         plot(frequencias_y, magnitudes_y, 'o');
         title("Hann" + ' Y ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 11);
         plot(frequencias_z, magnitudes_z, 'o');
         title("Hann" + ' Z ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
 % 
 %         %blackman  
         frequencias_x = [];
@@ -336,12 +353,18 @@ function [] = aplicarJanelasDeslizantes(dataLabels, signal_x, signal_y, signal_z
         subplot(3,4, 4);
         plot(frequencias_x, magnitudes_x, 'o');
         title("Blackman" + ' X ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 8);
         plot(frequencias_y, magnitudes_y, 'o');
         title("Blackman" + ' Y ')
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         subplot(3,4, 12);
         plot(frequencias_z, magnitudes_z, 'o');
         title("Blackman" + ' Z ');
+        xlabel('Frequência - Hz');
+        ylabel('Magnitude |X|');
         
         counters(activityID) = 1;
     end

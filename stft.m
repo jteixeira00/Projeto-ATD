@@ -1,11 +1,10 @@
 function stft(data)
     fs = 50;
     Ts = 1/fs;
-    data = data{:,:};
     N = numel(data);
     
     t = N*Ts; % Nao percebo esta linha
-    Tframe = 0.0015*t;
+    Tframe = 0.002*t;
     
     Toverlap = Tframe/2;
     
@@ -23,9 +22,9 @@ function stft(data)
         res = horzcat(res, m_data_frame(x));    
     end
     
-    figure();
+    figure("Name", "STFT - waterfall",'NumberTitle','off');
     waterfall(20*log10(res))
-    figure();
+    figure("Name", "STFT - imagesc",'NumberTitle','off');
     imagesc(20*log10(res))
     
 end

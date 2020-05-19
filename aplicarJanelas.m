@@ -107,9 +107,14 @@ function [] = aplicarJanelas(dataLabels, signal_x, signal_y, signal_z)
         subplot(3,4, 12);
         plot(f, dft_z, 'o');
         title("Blackman" + ' Z ');   
-
+        
+        if(i == 2)
+            disp(activity);
+            wvtool(hamming(windowSize), hann(windowSize), blackman(windowSize));
+        end
+            
         counters(activityID) = 1;
     end
     
-    wvtool(hamming(windowSize),hann(windowSize),blackman(windowSize));
+
 end 

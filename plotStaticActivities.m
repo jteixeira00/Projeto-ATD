@@ -1,4 +1,4 @@
-function [aac_x_mod, aac_y_mod, aac_z_mod] = plotStaticActivities(data, start, finish, activityID, figureID)
+function [max_dft_x, max_dft_y, max_dft_z] = plotStaticActivities(data, start, finish, activityID, figureID, showPlot)
     %periodo de amostragem, tendo em conta que a frequencia de amostragem é
     %50 Hz
     fs = 50;
@@ -34,16 +34,22 @@ function [aac_x_mod, aac_y_mod, aac_z_mod] = plotStaticActivities(data, start, f
     
     t = linspace(0,Ts*(windowSize-1)/60,windowSize)';  %array of times for the plot
     
-    figure(figureID);
-    % 3*(activityID-4) dá nos a linha certa consoante a atividade
-    subplot(3,3, 1 + 3*(activityID-4));
-    plot(f, aac_x_mod);
-    title(activity + ' X ')
-    subplot(3,3, 2 + 3*(activityID-4));
-    plot(f, aac_y_mod);
-    title(activity + ' Y ')
-    subplot(3,3, 3 + 3*(activityID-4));
-    plot(f, aac_z_mod);
-    title(activity + ' Z ');
-    hold on;
+    if(showPlot == true)
+        figure(figureID);
+        % 3*(activityID-4) dá nos a linha certa consoante a atividade
+        subplot(3,3, 1 + 3*(activityID-4));
+        plot(f, aac_x_mod);
+        title(activity + ' X ')
+        subplot(3,3, 2 + 3*(activityID-4));
+        plot(f, aac_y_mod);
+        title(activity + ' Y ')
+        subplot(3,3, 3 + 3*(activityID-4));
+        plot(f, aac_z_mod);
+        title(activity + ' Z ');
+        hold on;
+    end
+    
+    max_dft_x = max(aac_x_mod);
+    max_dft_y = max(aac_y_mod);
+    max_dft_z = max(aac_z_mod);
 end
