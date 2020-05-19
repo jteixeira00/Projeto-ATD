@@ -128,6 +128,11 @@ for i=1:18
  
 end
 
+dinamicas_negativos_verdadeiros = 0;
+nao_dinamicas = 0;
+
+dinamicas_positivos_verdadeiros = 0;
+dinamicas = 0;
 
 counters = zeros(1,12);     %para verificar se uma atividade jï¿½ foi apresentada no grafico
 
@@ -147,6 +152,19 @@ for j=1:length(datas)
                     p1 = plot3(max_dft_x, max_dft_y, max_dft_z,'o','MarkerEdgeColor',[1 0 0],'DisplayName','WALKING');
                     hold on
                     %counters(1) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x >= media_atividades_dinamicas_lim_inferior && max_dft_x <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_y >= media_atividades_dinamicas_lim_inferior && max_dft_y <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_z >= media_atividades_dinamicas_lim_inferior && max_dft_z <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    dinamicas = dinamicas + 3;
                 end
            case 2
                if(counters(2) == 0)
@@ -156,6 +174,20 @@ for j=1:length(datas)
                     p2 = plot3(max_dft_x, max_dft_y, max_dft_z,'o','MarkerEdgeColor',[0 1 0],'DisplayName','WALKING UP');
                     hold on
                     %counters(2) = 1;    %Para nao repetir o plot da atividade
+                    
+                    if(max_dft_x >= media_atividades_dinamicas_lim_inferior && max_dft_x <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_y >= media_atividades_dinamicas_lim_inferior && max_dft_y <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_z >= media_atividades_dinamicas_lim_inferior && max_dft_z <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    dinamicas = dinamicas + 3;
                end
            case 3
                if(counters(3) == 0)
@@ -165,6 +197,19 @@ for j=1:length(datas)
                     p3 = plot3(max_dft_x, max_dft_y, max_dft_z,'o','MarkerEdgeColor',[0 0 1],'DisplayName','WALKING DOWN');
                     hold on
                     %counters(3) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x >= media_atividades_dinamicas_lim_inferior && max_dft_x <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_y >= media_atividades_dinamicas_lim_inferior && max_dft_y <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    if(max_dft_z >= media_atividades_dinamicas_lim_inferior && max_dft_z <= media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_positivos_verdadeiros = dinamicas_positivos_verdadeiros +1;
+                    end
+                    dinamicas = dinamicas + 3;
                end
            case 4
                if(counters(4) == 0)
@@ -174,6 +219,19 @@ for j=1:length(datas)
                     p4 = plot3(max_dft_x, max_dft_y, max_dft_z,'x','MarkerEdgeColor',[0.2 0.2 0.2],'DisplayName','SITTING');
                     hold on
                     %counters(4) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 5
                if(counters(5) == 0)
@@ -183,6 +241,19 @@ for j=1:length(datas)
                     p5 = plot3(max_dft_x, max_dft_y, max_dft_z,'x','MarkerEdgeColor',[1 0 1],'DisplayName','STANDING');
                     hold on
                     %counters(5) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 6
                if(counters(6) == 0)
@@ -192,6 +263,19 @@ for j=1:length(datas)
                     p6 = plot3(max_dft_x, max_dft_y, max_dft_z,'x','MarkerEdgeColor',[0 1 1],'DisplayName','LAYING');
                     hold on
                     %counters(6) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 7
                if(counters(7) == 0)
@@ -201,6 +285,19 @@ for j=1:length(datas)
                     p7 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0.5 0.5 0.5],'DisplayName','STAND_TO_SIT');
                     hold on
                     %counters(7) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 8
                if(counters(8) == 0)
@@ -210,6 +307,11 @@ for j=1:length(datas)
                     p8 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0 0 0],'DisplayName','SIT_TO_STAND');
                     hold on
                     %counters(8) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 1;
                end
            case 9
                if(counters(9) == 0)
@@ -219,6 +321,19 @@ for j=1:length(datas)
                     p9 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0.5 0 0.5],'DisplayName','SIT_TO_LIE');
                     hold on
                     %counters(8) = 1;    %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 10
                if(counters(10) == 0)
@@ -228,6 +343,11 @@ for j=1:length(datas)
                     p10 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0 0.5 0.5],'DisplayName','LIE_TO_SIT');
                     hold on
                     %counters(10) = 1;   %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 1;
                end
            case 11
                if(counters(11) == 0)
@@ -237,6 +357,19 @@ for j=1:length(datas)
                     p11 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0.5 0.5 0],'DisplayName','STAND_TO_LIE');
                     hold on
                     %counters(11) = 1;   %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
            case 12
                if(counters(12) == 0)
@@ -246,6 +379,19 @@ for j=1:length(datas)
                     p12 = plot3(max_dft_x, max_dft_y, max_dft_z,'d','MarkerEdgeColor',[0 0.5 0],'DisplayName','LIE_TO_STAND');
                     hold on
                     %counters(12) = 1;   %Para nao repetir o plot da atividade
+                    if(max_dft_x < media_atividades_dinamicas_lim_inferior || max_dft_x > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_y < media_atividades_dinamicas_lim_inferior || max_dft_y > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    if(max_dft_z < media_atividades_dinamicas_lim_inferior || max_dft_z > media_atividades_dinamicas_lim_superior)
+                        %consideramos que não é uma atividade dinamica
+                        dinamicas_negativos_verdadeiros = dinamicas_negativos_verdadeiros +1;
+                    end
+                    nao_dinamicas = nao_dinamicas + 3;
                end
        end   
     end
@@ -254,6 +400,11 @@ end
 
 h = [p1;p2;p3;p4;p5;p6;p7;p8;p9;p10;p11;p12];
 legend(h);
+
+sensibilidade = dinamicas_positivos_verdadeiros / dinamicas;
+especificidade = dinamicas_negativos_verdadeiros / nao_dinamicas;
+disp("SENSIBILIDADE - " + sensibilidade * 100);
+disp("ESPECIFICIDADE - " + especificidade * 100);
 
 %activityIdentifier(datas, dataLabelss);
 
@@ -264,4 +415,4 @@ legend(h);
 
 
 %% STFT
-stft(signal_z);
+%stft(signal_z);
